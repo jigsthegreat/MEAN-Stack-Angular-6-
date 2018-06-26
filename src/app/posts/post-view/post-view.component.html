@@ -1,0 +1,15 @@
+<mat-card>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <h3>{{ post?.title }}</h3>
+  <p>{{ post?.content }}</p>
+  <form (submit)="onComment(commentForm)" #commentForm="ngForm">
+    <mat-form-field>
+      <input matInput type="text" name="content" ngModel placeholder="Comment" #commentInput="ngModel" required>
+      <mat-error *ngIf="commentInput.invalid">Please enter a comment.</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">Comment</button>
+  </form>
+  <div *ngIf="post && post.comments.length > 0">
+    <p *ngFor="let comment of post.comments">{{ comment.content }}</p>
+  </div>
+</mat-card>

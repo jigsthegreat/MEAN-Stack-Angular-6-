@@ -31,7 +31,8 @@ export class PostsService {
                 content: post.content,
                 id: post._id,
                 imagePath: post.imagePath,
-                creator: post.creator
+                creator: post.creator,
+                comments: post.comments
               };
             }),
             maxPosts: postData.maxPosts
@@ -39,7 +40,6 @@ export class PostsService {
         })
       )
       .subscribe(transformedPostData => {
-        console.log(transformedPostData);
         this.posts = transformedPostData.posts;
         this.postsUpdated.next({
           posts: [...this.posts],
@@ -58,9 +58,23 @@ export class PostsService {
       title: string;
       content: string;
       imagePath: string;
-      creator: string;
+      creator: { _id: string; firstname: string; lastname: string };
+      comments: [any];
     }>(BACKEND_URL + id);
     // return {...this.posts.find(p => p.id === id)};
+  }
+
+  addComment(content: string, postId: string) {
+    const commentData = new FormData();
+    commentData.append('content', content);
+    commentData.append('postId', postId);
+    console.log('content ', commentData.get('content'));
+    console.log('postid ', commentData.get('postId'));
+    this.http
+      .post<{ message: string, post: Post }>('http://localhost:3000/api/' + 'comments', commentData)
+      .subscribe(resposeData => {
+        console.log(resposeData);
+      });
   }
 
   addPost(title: string, content: string, image: File) {
@@ -69,20 +83,18 @@ export class PostsService {
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title);
+    console.log(postData);
     this.http
-      .post<{ message: string; post: Post }>(
-        BACKEND_URL,
-        postData
-      )
+      .post<{ message: string; post: Post }>(BACKEND_URL, postData)
       .subscribe(responseData => {
-      //   const post: Post = {
-      //     id: responseData.post.id,
-      //     title: title,
-      //     content: content,
-      //     imagePath: responseData.post.imagePath
-      //   };
-      //   this.posts.push(post);
-      //   this.postsUpdated.next([...this.posts]);
+        //   const post: Post = {
+        //     id: responseData.post.id,
+        //     title: title,
+        //     content: content,
+        //     imagePath: responseData.post.imagePath
+        //   };
+        //   this.posts.push(post);
+        //   this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/']);
       });
   }
@@ -102,29 +114,27 @@ export class PostsService {
         title: title,
         content: content,
         imagePath: image,
-        creator: null
+        creator: null,
+        comments: null
       };
     }
-    this.http
-      .put(BACKEND_URL + id, postData)
-      .subscribe(response => {
-        // const updatedPosts = [...this.posts];
-        // const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
-        // const post: Post = {
-        //   id: id,
-        //   title: title,
-        //   content: content,
-        //   imagePath: 'response.imagePath'
-        // };
-        // updatedPosts[oldPostIndex] = post;
-        // this.posts = updatedPosts;
-        // this.postsUpdated.next([...this.posts]);
-        this.router.navigate(['/']);
-      });
+    this.http.put(BACKEND_URL + id, postData).subscribe(response => {
+      // const updatedPosts = [...this.posts];
+      // const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
+      // const post: Post = {
+      //   id: id,
+      //   title: title,
+      //   content: content,
+      //   imagePath: 'response.imagePath'
+      // };
+      // updatedPosts[oldPostIndex] = post;
+      // this.posts = updatedPosts;
+      // this.postsUpdated.next([...this.posts]);
+      this.router.navigate(['/']);
+    });
   }
 
   deletePost(postId: string) {
-    return this.http
-      .delete(BACKEND_URL + postId);
+    return this.http.delete(BACKEND_URL + postId);
   }
 }

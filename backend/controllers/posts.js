@@ -1,6 +1,7 @@
 const Post = require('../models/post');
 
 exports.createPost = (req, res, next) => {
+  console.log(req.body);
   const url = req.protocol + '://' + req.get('host');
   const post = new Post({
     title: req.body.title,
@@ -63,6 +64,8 @@ exports.getPosts = (req, res, next) => {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
   postQuery
+    .populate('creator')
+    .populate('comments')
     .then(documents => {
       fetchedPosts = documents;
       return Post.count();

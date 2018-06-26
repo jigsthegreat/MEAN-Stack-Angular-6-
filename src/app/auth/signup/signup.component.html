@@ -9,6 +9,16 @@
       <input matInput type="password" name="password" ngModel placeholder="Password" #passwordInput="ngModel" required>
       <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
     </mat-form-field>
+    <div>
+      <mat-form-field style="width:50%; display: inline-block">
+        <input matInput type="text" name="firstname" ngModel placeholder="First Name" #firstnameInput="ngModel">
+        <mat-error *ngIf="firstnameInput.invalid">Please enter a valid First Name.</mat-error>
+      </mat-form-field>
+      <mat-form-field style="width:50%; display: inline-block">
+        <input matInput type="text" name="lastname" ngModel placeholder="Last Name" #lastnameInput="ngModel">
+        <mat-error *ngIf="lastnameInput.invalid">Please enter a valid Last Name.</mat-error>
+      </mat-form-field>
+    </div>
     <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">Signup</button>
   </form>
 </mat-card>
