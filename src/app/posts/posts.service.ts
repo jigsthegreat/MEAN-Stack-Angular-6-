@@ -71,7 +71,7 @@ export class PostsService {
     console.log('content ', commentData.get('content'));
     console.log('postid ', commentData.get('postId'));
     this.http
-      .post<{ message: string, post: Post }>('http://localhost:3000/api/' + 'comments', commentData)
+      .post<{ message: string, post: Post }>(BACKEND_URL + '/comments', commentData)
       .subscribe(resposeData => {
         console.log(resposeData);
       });

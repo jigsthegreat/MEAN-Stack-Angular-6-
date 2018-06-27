@@ -2,15 +2,10 @@ const Comment = require('../models/comment');
 const Post = require('../models/post');
 
 exports.createComment = (req, res, next) => {
-  // console.log(req);
-  console.log(req.body);
   const comment = new Comment({
     content: req.body.content,
-    // creator: req.userData.userId
-    creator: '5b3064d866f483199c311a69'
+    creator: req.userData.userId
   });
-  console.log(comment);
-  console.log(req.body.postId);
   Post.findById(req.body.postId).then(post => {
     if (post) {
       comment.save().then(createdComment => {

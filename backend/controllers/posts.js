@@ -25,7 +25,7 @@ exports.createPost = (req, res, next) => {
         message: 'Creating a post failed!'
       });
     });
-}
+};
 
 exports.updatePost = (req, res, next) => {
   let imagePath = req.body.imagePath;
@@ -53,7 +53,7 @@ exports.updatePost = (req, res, next) => {
         message: "Couldn't update post!"
       });
     });
-}
+};
 
 exports.getPosts = (req, res, next) => {
   const pageSize = +req.query.pagesize;
@@ -65,7 +65,14 @@ exports.getPosts = (req, res, next) => {
   }
   postQuery
     .populate('creator')
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      model: 'Comment',
+      populate: {
+        path: 'creator',
+        model: 'User'
+      }
+    })
     .then(documents => {
       fetchedPosts = documents;
       return Post.count();
@@ -82,10 +89,19 @@ exports.getPosts = (req, res, next) => {
         message: 'Fetching posts failed!'
       });
     });
-}
+};
 
 exports.getPost = (req, res, next) => {
   Post.findById(req.params.id)
+    .populate('creator')
+    .populate({
+      path: 'comments',
+      model: 'Comment',
+      populate: {
+        path: 'creator',
+        model: 'User'
+      }
+    })
     .then(post => {
       if (post) {
         res.status(200).json(post);
@@ -98,7 +114,7 @@ exports.getPost = (req, res, next) => {
         message: 'Fetching post failed!'
       });
     });
-}
+};
 
 exports.deletePost = (req, res, next) => {
   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId })
@@ -114,4 +130,4 @@ exports.deletePost = (req, res, next) => {
         message: 'Fetching posts failed!'
       });
     });
-}
+};

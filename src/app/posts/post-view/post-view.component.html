@@ -10,6 +10,8 @@
     <button mat-raised-button color="accent" type="submit">Comment</button>
   </form>
   <div *ngIf="post && post.comments.length > 0">
-    <p *ngFor="let comment of post.comments">{{ comment.content }}</p>
+    <div *ngFor="let comment of post.comments">
+      {{ comment.content }} - <small>{{ comment.creator.firstname }}</small>
+    </div>
   </div>
 </mat-card>

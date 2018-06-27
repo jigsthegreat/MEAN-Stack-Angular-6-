@@ -37,6 +37,7 @@ export class PostViewComponent implements OnInit, OnDestroy {
       this.postsService.getPost(this.postId).subscribe(postData => {
         this.isLoading = false;
         this.imagePreview = postData.imagePath;
+        console.log(postData);
         this.post = {
           id: postData._id,
           title: postData.title,
@@ -53,8 +54,6 @@ export class PostViewComponent implements OnInit, OnDestroy {
     if (form.invalid) {
       return;
     }
-    console.log(form.value.content);
-    // this.isLoading = true;
     console.log(this.postId);
     this.postsService.addComment(form.value.content, this.postId);
   }
